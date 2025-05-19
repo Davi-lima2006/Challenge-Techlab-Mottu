@@ -1,0 +1,51 @@
+# Challenge Techlab Mottu
+
+## Nome dos integrantes:
+Davi Alves de Lima - RM 556008  
+Pedro Henrique Mendonça de Novais – RM 555276  
+Rodrigo Alcides Bohac Ríos – RM 554826
+
+## Como rodar o projeto localmente
+
+### Pré-requisitos
+
+Antes de começar, você vai precisar ter instalado na sua máquina:
+- [Node.js](https://nodejs.org/)
+- [Git](https://git-scm.com/)
+- [Expo CLI](https://docs.expo.dev/workflow/expo-cli/)  
+- Um celular com o app **Expo Go** instalado (Android/iOS)  
+ou  
+- Um emulador Android configurado (Android Studio)
+
+### Passo a passo para rodar o projeto
+
+## Clone este repositório:
+git clone https://github.com/Davi-lima2006/Challenge-Techlab-Mottu.git
+cd Challenge-Techlab-Mottu
+npm install
+npm run android
+
+## solução do projeto
+Solução Implementada
+A solução técnica proposta utiliza tecnologia RFID ativa (transponder ou beacon)
+com pings de localização programados em ciclos definidos.
+O objetivo é rastrear motocicletas nos pátios de manutenção por meio da triangulação de sinal e visão computacional.
+O dispositivo é fixado no quadro chassi da moto usando uma braçadeira de nylon tipo “enforca-gato”.
+O ping é configurável (por exemplo, a cada 5 minutos ou 1 hora)
+permitindo balancear a frequência de emissão com a duração da bateria
+que varia entre 2 a 3 anos e cobre até 150 metros.
+A desinstalação do RFID é obrigatória ao término do serviço, sendo necessário devolvê-lo ao estoque. 
+O sistema também gera alertas caso um item registrado deixe de emitir sinal 
+sem ter sido removido formalmente, garantindo segurança e controle.
+
+No app, o fluxo começa na Tela Inicial com um botão “Iniciar”
+que leva à Tela de Login com campos de e-mail e senha.
+Após clicar em “Entrar”, o usuário acessa o Menu Principal, que apresenta cinco opções.
+Em “Gestão de Pátio”, uma imagem fictícia representa a área de rastreamento das motos 
+(futuramente substituída pela visão computacional real). Em “Adicionar Motocicleta” 
+é possível cadastrar marca, modelo, placa e tipo de serviço (manutenção, revisão, conserto)
+além de associar um RFID à moto. Em “Atualizar Motocicleta”
+o usuário visualiza uma lista com 600 placas mockadas e pode selecionar uma para editar os dados. 
+Já em “Consultar Motocicleta”, as placas cadastradas são listadas e, ao clicar na seta ao lado
+são exibidas as credenciais da moto com dois botões: “Ver Serviços” (mostra os serviços cadastrados) 
+e “Excluir” (remove a moto do sistema). Por fim, o botão “Encerrar” retorna à Tela Inicial.
