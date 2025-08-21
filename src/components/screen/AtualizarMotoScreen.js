@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { ThemeContext } from '../screen/ThemeContext';
 
 const gerarMotosMockadas = () => {
   const motos = [];
@@ -24,6 +26,8 @@ const gerarMotosMockadas = () => {
 
 const AtualizarMotoScreen = () => {
   const navigation = useNavigation();
+  const { isDark } = useContext(ThemeContext);
+
   const todasMotos = gerarMotosMockadas();
   const [filtroPlaca, setFiltroPlaca] = useState('');
 
@@ -31,30 +35,40 @@ const AtualizarMotoScreen = () => {
     moto.placa.toLowerCase().includes(filtroPlaca.toLowerCase())
   );
 
+  // cores dinâmicas
+  const bgColor = isDark ? '#000' : '#fff';
+  const textColor = isDark ? '#28a745' : '#006400';
+  const inputBg = isDark ? '#1c1c1c' : '#eee';
+  const inputText = isDark ? '#fff' : '#000';
+  const itemBg = isDark ? '#1c1c1c' : '#ddd';
+  const itemText = isDark ? '#fff' : '#000';
+  const placeholderColor = isDark ? '#888' : '#555';
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.item}
+      style={[styles.item, { backgroundColor: itemBg }]}
       onPress={() => navigation.navigate('EditarMoto', { moto: item })}
     >
-      <Text style={styles.texto}>{item.placa}</Text>
+      <Text style={[styles.texto, { color: itemText }]}>{item.placa}</Text>
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Selecione a moto para atualizar</Text>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={bgColor} />
+      <Text style={[styles.titulo, { color: textColor }]}>Selecione a moto para atualizar</Text>
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: inputBg, color: inputText }]}
         placeholder="Digite a placa..."
-        placeholderTextColor="#888"
+        placeholderTextColor={placeholderColor}
         value={filtroPlaca}
         onChangeText={setFiltroPlaca}
       />
 
       {motosFiltradas.length === 0 ? (
         <View style={styles.semResultadosContainer}>
-          <Text style={styles.semResultados}>
+          <Text style={[styles.semResultados, { color: isDark ? '#ccc' : '#444' }]}>
             Nenhuma moto encontrada com essa placa.
           </Text>
         </View>
@@ -75,33 +89,27 @@ const AtualizarMotoScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     padding: 20,
   },
   titulo: {
     fontSize: 22,
-    color: '#28a745',
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
   },
   input: {
-    backgroundColor: '#1c1c1c',
-    color: '#fff',
     padding: 12,
     borderRadius: 8,
-    borderColor: '#28a745',
     borderWidth: 1,
+    borderColor: '#28a745',
     marginBottom: 15,
   },
   item: {
-    backgroundColor: '#1c1c1c',
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
   },
   texto: {
-    color: '#fff',
     fontSize: 16,
   },
   semResultadosContainer: {
@@ -110,7 +118,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   semResultados: {
-    color: '#ccc',
     fontSize: 18,
     textAlign: 'center',
     paddingHorizontal: 20,

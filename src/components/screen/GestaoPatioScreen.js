@@ -1,12 +1,20 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, Image, StyleSheet, StatusBar } from 'react-native';
+import { ThemeContext } from '../screen/ThemeContext';
 
 export default function GestaoPatioScreen() {
+  const { isDark } = useContext(ThemeContext); // pega tema global
+
+  // cores dinâmicas
+  const backgroundColor = isDark ? '#000' : '#fff';
+  const textColor = isDark ? '#00FF00' : '#28a745';
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Gestão do Pátio</Text>
+    <View style={[styles.container, { backgroundColor }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={backgroundColor} />
+      <Text style={[styles.titulo, { color: textColor }]}>Gestão do Pátio</Text>
       <Image
-        source={require('../../../assets/image.png')} 
+        source={require('../../../assets/Gestão.png')} 
         style={styles.imagem}
         resizeMode="contain"
       />
@@ -17,7 +25,6 @@ export default function GestaoPatioScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingTop: 40,
     paddingHorizontal: 20,
     alignItems: 'center',
@@ -25,7 +32,6 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#00FF00',
     marginBottom: 20,
     marginTop: -30, 
   },

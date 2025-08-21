@@ -7,9 +7,11 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
-import { BikeContext } from '../../context/BikeContext'; 
+import { BikeContext } from '../../context/BikeContext';
+import { ThemeContext } from '../screen/ThemeContext';
 
 const tiposDeServico = [
   'Manutenção (pontual)',
@@ -22,6 +24,7 @@ const tiposDeServico = [
 const AddBikeScreen = () => {
   const navigation = useNavigation(); 
   const { addBike } = useContext(BikeContext);
+  const { isDark } = useContext(ThemeContext); // pega o tema global
 
   const [marca, setMarca] = useState('');
   const [modelo, setModelo] = useState('');
@@ -83,31 +86,43 @@ const AddBikeScreen = () => {
     setOutroServicoDescricao('');
   };
 
+  // cores dinâmicas
+  const bgColor = isDark ? '#000' : '#fff';
+  const textColor = isDark ? '#28a745' : '#006400';
+  const inputBg = isDark ? '#222' : '#eee';
+  const inputText = isDark ? '#fff' : '#000';
+  const checkboxBorder = isDark ? '#28a745' : '#006400';
+  const checkboxFill = isDark ? '#28a745' : '#006400';
+  const buttonBg = '#28a745';
+  const buttonTextColor = '#fff';
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Cadastro de Moto</Text>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: bgColor }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={bgColor} />
 
-      <TextInput style={styles.input} placeholder="Marca" placeholderTextColor="#aaa" value={marca} onChangeText={setMarca} />
-      <TextInput style={styles.input} placeholder="Modelo" placeholderTextColor="#aaa" value={modelo} onChangeText={setModelo} />
-      <TextInput style={styles.input} placeholder="Placa" placeholderTextColor="#aaa" value={placa} onChangeText={setPlaca} />
-      <TextInput style={styles.input} placeholder="Chassi" placeholderTextColor="#aaa" value={chassi} onChangeText={setChassi} />
-      <TextInput style={styles.input} placeholder="Motor" placeholderTextColor="#aaa" value={motor} onChangeText={setMotor} />
-      <TextInput style={styles.input} placeholder="IMEI IoT" placeholderTextColor="#aaa" value={imeiIot} onChangeText={setImeiIot} />
-      <TextInput style={styles.input} placeholder="RFID" placeholderTextColor="#aaa" value={rfid} onChangeText={setRfid} />
+      <Text style={[styles.title, { color: textColor }]}>Cadastro de Moto</Text>
 
-      <Text style={styles.sectionTitle}>Tipo de Serviço:</Text>
+      <TextInput style={[styles.input, { backgroundColor: inputBg, color: inputText }]} placeholder="Marca" placeholderTextColor="#aaa" value={marca} onChangeText={setMarca} />
+      <TextInput style={[styles.input, { backgroundColor: inputBg, color: inputText }]} placeholder="Modelo" placeholderTextColor="#aaa" value={modelo} onChangeText={setModelo} />
+      <TextInput style={[styles.input, { backgroundColor: inputBg, color: inputText }]} placeholder="Placa" placeholderTextColor="#aaa" value={placa} onChangeText={setPlaca} />
+      <TextInput style={[styles.input, { backgroundColor: inputBg, color: inputText }]} placeholder="Chassi" placeholderTextColor="#aaa" value={chassi} onChangeText={setChassi} />
+      <TextInput style={[styles.input, { backgroundColor: inputBg, color: inputText }]} placeholder="Motor" placeholderTextColor="#aaa" value={motor} onChangeText={setMotor} />
+      <TextInput style={[styles.input, { backgroundColor: inputBg, color: inputText }]} placeholder="IMEI IoT" placeholderTextColor="#aaa" value={imeiIot} onChangeText={setImeiIot} />
+      <TextInput style={[styles.input, { backgroundColor: inputBg, color: inputText }]} placeholder="RFID" placeholderTextColor="#aaa" value={rfid} onChangeText={setRfid} />
+
+      <Text style={[styles.sectionTitle, { color: textColor }]}>Tipo de Serviço:</Text>
       {tiposDeServico.map((servico, index) => (
         <TouchableOpacity key={index} style={styles.checkboxContainer} onPress={() => toggleServico(servico)}>
-          <View style={styles.checkbox}>
-            {servicosSelecionados.includes(servico) && <View style={styles.checked} />}
+          <View style={[styles.checkbox, { borderColor: checkboxBorder }]}>
+            {servicosSelecionados.includes(servico) && <View style={[styles.checked, { backgroundColor: checkboxFill }]} />}
           </View>
-          <Text style={styles.checkboxLabel}>{servico}</Text>
+          <Text style={[styles.checkboxLabel, { color: textColor }]}>{servico}</Text>
         </TouchableOpacity>
       ))}
 
       {servicosSelecionados.includes('Outro') && (
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: inputBg, color: inputText }]}
           placeholder="Descreva o serviço"
           placeholderTextColor="#aaa"
           value={outroServicoDescricao}
@@ -115,8 +130,8 @@ const AddBikeScreen = () => {
         />
       )}
 
-      <TouchableOpacity style={styles.button} onPress={handleSalvar}>
-        <Text style={styles.buttonText}>Salvar Moto</Text>
+      <TouchableOpacity style={[styles.button, { backgroundColor: buttonBg }]} onPress={handleSalvar}>
+        <Text style={[styles.buttonText, { color: buttonTextColor }]}>Salvar Moto</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -125,29 +140,24 @@ const AddBikeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#000',
     alignItems: 'center',
     padding: 20,
   },
   title: {
     fontSize: 24,
-    color: '#28a745',
     fontWeight: 'bold',
     marginTop: -10, 
     marginBottom: 30,
     textAlign: 'center',
   },
   input: {
-    backgroundColor: '#fff',
     width: '100%',
     padding: 15,
     borderRadius: 8,
     marginBottom: 15,
     fontSize: 16,
-    color: '#000',
   },
   sectionTitle: {
-    color: '#28a745',
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 10,
@@ -164,7 +174,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 2,
-    borderColor: '#28a745',
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -172,14 +181,11 @@ const styles = StyleSheet.create({
   checked: {
     width: 12,
     height: 12,
-    backgroundColor: '#28a745',
   },
   checkboxLabel: {
-    color: '#fff',
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#28a745',
     padding: 15,
     borderRadius: 10,
     width: '100%',
@@ -187,7 +193,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonText: {
-    color: '#fff',
     fontWeight: 'bold',
     fontSize: 18,
   },

@@ -7,7 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ThemeContext } from '../screen/ThemeContext';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function SignupScreen({ navigation }) {
+export default function CadastroScreen({ navigation }) {
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
@@ -18,30 +19,36 @@ export default function SignupScreen({ navigation }) {
   const handlePressIn = () => Animated.spring(scaleValue, { toValue: 0.95, useNativeDriver: true }).start();
   const handlePressOut = () => Animated.spring(scaleValue, { toValue: 1, friction: 3, tension: 40, useNativeDriver: true }).start();
 
-  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
 
-  const handleLogin = async () => {
-    if (!email || !senha) {
+  const handleCadastro = async () => {
+    if (!nome || !email || !senha) {
       setError('Todos os campos são obrigatórios.');
+      return;
+    }
+    if (nome.length < 3) {
+      setError('O nome deve ter pelo menos 3 caracteres.');
       return;
     }
     if (!validateEmail(email)) {
       setError('Email inválido.');
       return;
     }
+    if (senha.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
 
     try {
-      const savedEmail = await AsyncStorage.getItem('email');
-      const savedSenha = await AsyncStorage.getItem('senha');
-
-      if (email === savedEmail && senha === savedSenha) {
-        navigation.navigate('Home');
-      } else {
-        setError('Email ou senha incorretos.');
-      }
+      await AsyncStorage.setItem('nome', nome);
+      await AsyncStorage.setItem('email', email);
+      await AsyncStorage.setItem('senha', senha);
+      navigation.navigate('Signup');
     } catch (err) {
-      console.error('Erro ao acessar os dados:', err);
-      setError('Erro ao acessar os dados. Tente novamente.');
+      setError('Erro ao salvar os dados. Tente novamente.');
     }
   };
 
@@ -63,7 +70,7 @@ export default function SignupScreen({ navigation }) {
           source={isDark ? require('../../../assets/Login.png') : require('../../../assets/logo.png')}
           style={styles.logo}
         />
-        <Text style={[styles.title, { color: textColor }]}>Faça seu login</Text>
+        <Text style={[styles.title, { color: textColor }]}>Cadastro</Text>
       </View>
 
       {error ? (
@@ -74,6 +81,13 @@ export default function SignupScreen({ navigation }) {
       ) : null}
 
       <View style={styles.form}>
+        <TextInput
+          style={[styles.input, { backgroundColor: inputBg, color: inputText, borderColor: linkGreen }]}
+          placeholder="Nome"
+          placeholderTextColor={placeholderColor}
+          value={nome}
+          onChangeText={setNome}
+        />
         <TextInput
           style={[styles.input, { backgroundColor: inputBg, color: inputText, borderColor: linkGreen }]}
           placeholder="Email"
@@ -91,15 +105,15 @@ export default function SignupScreen({ navigation }) {
           onChangeText={setSenha}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Entrar</Text>
+        <TouchableOpacity style={styles.button} onPress={handleCadastro}>
+          <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
 
         <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
-          <TouchableOpacity onPress={() => navigation.navigate('Cadastro')} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+          <TouchableOpacity onPress={() => navigation.navigate('Signup')} onPressIn={handlePressIn} onPressOut={handlePressOut}>
             <Text style={styles.linkText}>
-              <Text style={{ color: textColor }}>Não tem cadastro? </Text>
-              <Text style={{ color: linkGreen, fontWeight: '700' }}>Faça seu cadastro agora</Text>
+              <Text style={{ color: textColor }}>Já tem cadastro? </Text>
+              <Text style={{ color: linkGreen, fontWeight: '700' }}>Faça login agora</Text>
             </Text>
           </TouchableOpacity>
         </Animated.View>
