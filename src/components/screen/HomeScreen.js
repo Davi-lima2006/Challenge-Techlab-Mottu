@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, StatusBar, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
 import { ThemeContext } from '../screen/ThemeContext';
 
 export default function HomeScreen({ navigation }) {
-  const { isDark } = useContext(ThemeContext); // tema global
+  const { isDark } = useContext(ThemeContext); 
 
   const encerrarSessao = () => {
     Alert.alert(
@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   // cores dinâmicas
-  const backgroundColors = isDark ? ['#000000', '#0d0d0d'] : ['#ffffff', '#f0f0f0'];
+  const backgroundColors = isDark ? ['#000000CC', '#0d0d0dCC'] : ['#FFFFFFCC', '#f0f0f0CC'];
   const textColor = isDark ? '#32CD32' : '#28a745';
   const buttonTextColor = '#fff';
   const buttonBg = '#32CD32';
@@ -34,30 +34,34 @@ export default function HomeScreen({ navigation }) {
   const exitTextColor = isDark ? '#fff' : '#000';
   const shadowColor = isDark ? '#32CD32' : '#28a745';
 
+  const bgImage = require('../../../assets/foto.moto.png');
+
   return (
-    <LinearGradient colors={backgroundColors} style={styles.container}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={backgroundColors[0]} />
+    <ImageBackground source={bgImage} style={styles.bgImage} resizeMode="cover">
+      <LinearGradient colors={backgroundColors} style={styles.container}>
+        <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent={true} />
 
-      <View style={styles.titleContainer}>
-        <Image source={require('../../../assets/Motos.png')} style={styles.logo} resizeMode="contain" />
-        <Text style={[styles.title, { color: textColor } ]}>Mottu</Text>
-      </View>
+        <View style={styles.titleContainer}>
+          <Image source={require('../../../assets/Motos.png')} style={styles.logo} resizeMode="contain" />
+          <Text style={[styles.title, { color: textColor }]}>Mottu</Text>
+        </View>
 
-      <View style={styles.menuContainer}>
-        <MenuButton icon="clipboard" text="Gestão de Pátio" onPress={() => navigation.navigate('GestaoPatio')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
-        <MenuButton icon="plus-circle" text="Adicionar Motocicleta" onPress={() => navigation.navigate('AddBike')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
-        <MenuButton icon="edit" text="Atualizar Motocicleta" onPress={() => navigation.navigate('AtualizarMoto')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
-        <MenuButton icon="search" text="Consultar Motocicleta" onPress={() => navigation.navigate('VerMotos')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
-        <MenuButton
-          icon="log-out"
-          text="Sair"
-          onPress={encerrarSessao}
-          bg={exitButtonBg}
-          color={exitTextColor}
-          isExit
-        />
-      </View>
-    </LinearGradient>
+        <View style={styles.menuContainer}>
+          <MenuButton icon="clipboard" text="Gestão de Pátio" onPress={() => navigation.navigate('GestaoPatio')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
+          <MenuButton icon="plus-circle" text="Adicionar Motocicleta" onPress={() => navigation.navigate('AddBike')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
+          <MenuButton icon="edit" text="Atualizar Motocicleta" onPress={() => navigation.navigate('AtualizarMoto')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
+          <MenuButton icon="search" text="Consultar Motocicleta" onPress={() => navigation.navigate('VerMotos')} bg={buttonBg} color={buttonTextColor} shadow={shadowColor} />
+          <MenuButton
+            icon="log-out"
+            text="Sair"
+            onPress={encerrarSessao}
+            bg={exitButtonBg}
+            color={exitTextColor}
+            isExit
+          />
+        </View>
+      </LinearGradient>
+    </ImageBackground>
   );
 }
 
@@ -76,6 +80,7 @@ const MenuButton = ({ icon, text, onPress, isExit, bg, color, shadow }) => (
 );
 
 const styles = StyleSheet.create({
+  bgImage: { flex: 1 },
   container: {
     flex: 1,
     paddingTop: 80,

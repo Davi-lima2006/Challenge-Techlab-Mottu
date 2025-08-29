@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../screen/ThemeContext';
@@ -36,11 +37,11 @@ const AtualizarMotoScreen = () => {
   );
 
   // cores dinâmicas
-  const bgColor = isDark ? '#000' : '#fff';
-  const textColor = isDark ? '#28a745' : '#006400';
-  const inputBg = isDark ? '#1c1c1c' : '#eee';
+  const overlayColor = isDark ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.85)';
+  const textColor = isDark ? '#00FF88' : '#006400';
+  const inputBg = isDark ? '#1c1c1c' : '#f2f2f2';
   const inputText = isDark ? '#fff' : '#000';
-  const itemBg = isDark ? '#1c1c1c' : '#ddd';
+  const itemBg = isDark ? '#2a2a2a' : '#fff';
   const itemText = isDark ? '#fff' : '#000';
   const placeholderColor = isDark ? '#888' : '#555';
 
@@ -54,48 +55,63 @@ const AtualizarMotoScreen = () => {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={bgColor} />
-      <Text style={[styles.titulo, { color: textColor }]}>Selecione a moto para atualizar</Text>
+    <ImageBackground
+      source={require('../../../assets/motinho.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={[styles.overlay, { backgroundColor: overlayColor }]}>
+        <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
 
-      <TextInput
-        style={[styles.input, { backgroundColor: inputBg, color: inputText }]}
-        placeholder="Digite a placa..."
-        placeholderTextColor={placeholderColor}
-        value={filtroPlaca}
-        onChangeText={setFiltroPlaca}
-      />
+        <Text style={[styles.titulo, { color: textColor }]}>
+          Selecione a moto para atualizar
+        </Text>
 
-      {motosFiltradas.length === 0 ? (
-        <View style={styles.semResultadosContainer}>
-          <Text style={[styles.semResultados, { color: isDark ? '#ccc' : '#444' }]}>
-            Nenhuma moto encontrada com essa placa.
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={motosFiltradas}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          initialNumToRender={20}
-          maxToRenderPerBatch={30}
-          windowSize={21}
+        <TextInput
+          style={[styles.input, { backgroundColor: inputBg, color: inputText }]}
+          placeholder="Digite a placa..."
+          placeholderTextColor={placeholderColor}
+          value={filtroPlaca}
+          onChangeText={setFiltroPlaca}
         />
-      )}
-    </View>
+
+        {motosFiltradas.length === 0 ? (
+          <View style={styles.semResultadosContainer}>
+            <Text style={[styles.semResultados, { color: isDark ? '#ccc' : '#444' }]}>
+              Nenhuma moto encontrada com essa placa.
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={motosFiltradas}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            initialNumToRender={20}
+            maxToRenderPerBatch={30}
+            windowSize={21}
+          />
+        )}
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
+    flex: 1,
+  },
+  overlay: {
     flex: 1,
     padding: 20,
   },
   titulo: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
   input: {
     padding: 12,
@@ -108,6 +124,11 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   texto: {
     fontSize: 16,
